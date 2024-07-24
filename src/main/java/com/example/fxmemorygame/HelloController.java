@@ -1,6 +1,7 @@
 package com.example.fxmemorygame;
 
 
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
@@ -235,43 +237,24 @@ public class HelloController implements Initializable {
 
 
     private void checkImages() {
-
-
-    if (clickCount == 1) {
-        firstClickedImage = imageView;
-        if(areEqual(firstClickedImage, secondClickedImage) || areEqual(firstClickedImage, thirdClickedImage)){
-            clickCount = 0;
+        if (clickCount == 1) {
+            firstClickedImage = imageView;
+        } else if (clickCount == 2) {
+            secondClickedImage = imageView;
+            if (areEqual(firstClickedImage, secondClickedImage)) {
+                lbl1.setText("It's a match!");
+                clickCount = 0;
+            } else {
+                lbl1.setText("No match, try again.");
+                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                pause.setOnFinished(e -> {
+                    firstClickedImage.setImage(img17);
+                    secondClickedImage.setImage(img17);
+                    clickCount = 0;
+                });
+                pause.play();
+            }
         }
-
-    } else if (clickCount == 2) {
-        secondClickedImage = imageView;
-        if(areEqual(secondClickedImage, firstClickedImage)||areEqual(secondClickedImage, thirdClickedImage)) {
-
-            clickCount = 0;
-
-        } else {
-           thirdClickedImage.setImage(img17);
-
-        }
-
-    } else if (clickCount == 3) {
-        thirdClickedImage = imageView;
-        if (areEqual(firstClickedImage, thirdClickedImage)) {
-            secondClickedImage.setImage(img17);
-            clickCount = 0;
-        }else if (areEqual(secondClickedImage, thirdClickedImage)){
-            firstClickedImage.setImage(img17);
-            clickCount = 0;
-        }else {
-            firstClickedImage.setImage(img17);
-            secondClickedImage.setImage(img17);
-            clickCount = 0;
-        }
-
-
-    }
-
-
     }
 
     public boolean areEqual(ImageView image1, ImageView image2){
